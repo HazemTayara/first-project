@@ -17,12 +17,11 @@ class UserController
     {
         $users = $this->model->home();
         // include __DIR__.'/../resource/views/home.php';
-        include __DIR__.'/../../resource/view/home.php';
+        include __DIR__ . '/../../resource/view/home.php';
     }
     public function add()
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            include __DIR__ . "/../../resource/view/add.php";
         } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
             $data = [
                 'name' => $_POST["username"],
@@ -36,12 +35,18 @@ class UserController
                 if ($this->model->add($data)) {
                     header("LOCATION: " . BASE_BATH);
                 } else {
-                    include __DIR__ . "/../../resource/view/add.php";
-                    echo "<p>Failed to add user.</p>";
+                    echo json_encode(
+                        [
+                            'msg' => 'faild to add user'
+                        ]
+                    );
                 }
             } else {
-                include __DIR__ . "/../../resource/view/add.php";
-                echo "<p>your data is wrong</p>";
+                echo json_encode(
+                    [
+                        'msg' => 'your data is wrong'
+                    ]
+                );
             }
         }
     }
@@ -49,7 +54,7 @@ class UserController
     {
         $error = ["", "your data is wrong", "Failed to edit user"];
         $i = 0;
-        
+
         if ($this->model->get($id)) {
             if ($_SERVER["REQUEST_METHOD"] == 'POST') {
                 $data = [
@@ -62,16 +67,23 @@ class UserController
                     unset($data['password_configuration']);
                     if (!$this->model->edit($id, $data)) {
                         $i = 2;
-                    } 
+                    }
                 } else {
                     $i = 1;
                 }
             }
             $user = $this->model->get($id);
-            include __DIR__ . "/../../resource/view/edit.php";
-            echo "<p>" . $error[$i] . "</p>";
+            echo json_encode(
+                [
+                    'msg' => $error[$i]
+                ]
+            );
         } else {
-            echo "<h1>this ID is not exist</h1>";
+            echo json_encode(
+                [
+                    'msg' => 'this ID is not exist'
+                ]
+            );
         }
     }
     public function delete($id)
@@ -81,7 +93,9 @@ class UserController
                 header("LOCATION:" . BASE_BATH);
             }
         } else {
-            echo "<h1>this ID is not exist</h1>";
+            echo json_encode(
+                ['msg' => 'this ID is not exist']
+            );
         }
     }
 }
