@@ -13,12 +13,12 @@ class UserController
         $this->model = new UserModel($db);
     }
 
-    public function home()
-    {
-        $users = $this->model->home();
-        // include __DIR__.'/../resource/views/home.php';
-        include __DIR__ . '/../../resource/view/home.php';
-    }
+    // public function home()
+    // {
+    //     $users = $this->model->home();
+    //     // include __DIR__.'/../resource/views/home.php';
+    //     include __DIR__ . '/../../resource/view/home.php';
+    // }
     public function add()
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
