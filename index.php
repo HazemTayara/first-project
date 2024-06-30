@@ -1,9 +1,11 @@
 <?php
 define('BASE_BATH', '/26_mvc_4/project/');
-
 require_once __DIR__ . "/config/config.php";
 require_once __DIR__ . "/vendor/Mysqlidb/MysqliDb.php";
-require_once __DIR__ . "/app/controllers/UserController.php" ;
+require_once __DIR__ . "/app/controllers/UserController.php";
+if (!isset($_SESSION["login"]) && $_SESSION["login"] != True) {
+    // SEND Json : Access denied
+}
 $config = require "config/config.php";
 $db = new MysqliDb($config);
 $controller = new UserController($db);

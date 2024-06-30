@@ -1,6 +1,5 @@
 <?php
 
-
 class UserModel
 {
     private $tableName = "users";
@@ -27,6 +26,10 @@ class UserModel
     {
         return $this->db->where("id", $id)->getOne($this->tableName);
     }
+    public function getEmail($email)
+    {
+        return $this->db->where("email", $email)->getOne($this->tableName);
+    }
     public function edit($id, $data)
     {
         return $this->db->where("id", $id)->update($this->tableName, $data);
@@ -35,4 +38,12 @@ class UserModel
     {
         return $this->db->where("id" , $id )->delete($this->tableName, $id);
     }
+
+
+    public function reges($data){
+        
+    }
+
+
+
 }
