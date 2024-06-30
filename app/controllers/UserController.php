@@ -18,12 +18,10 @@ class UserController implements userInterface
     public function home()
     {
         $users = $this->model->home();
-        include __DIR__ . '/../../resource/view/home.php';
     }
     public function add()
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            include __DIR__ . "/../../resource/view/add.php";
         } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
             $data = [
                 'name' => $_POST["username"],
@@ -37,12 +35,18 @@ class UserController implements userInterface
                 if ($this->model->add($data)) {
                     header("LOCATION: " . BASE_BATH);
                 } else {
-                    include __DIR__ . "/../../resource/view/add.php";
-                    echo "<p>Failed to add user.</p>";
+                    echo json_encode(
+                        [
+                            'msg' => 'faild to add user'
+                        ]
+                    );
                 }
             } else {
-                include __DIR__ . "/../../resource/view/add.php";
-                echo "<p>your data is wrong</p>";
+                echo json_encode(
+                    [
+                        'msg' => 'your data is wrong'
+                    ]
+                );
             }
         }
     }
@@ -69,10 +73,17 @@ class UserController implements userInterface
                 }
             }
             $user = $this->model->get($id);
-            include __DIR__ . "/../../resource/view/edit.php";
-            echo "<p>" . $error[$i] . "</p>";
+            echo json_encode(
+                [
+                    'msg' => $error[$i]
+                ]
+            );
         } else {
-            echo "<h1>this ID is not exist</h1>";
+            echo json_encode(
+                [
+                    'msg' => 'this ID is not exist'
+                ]
+            );
         }
     }
     public function delete($id)
@@ -82,13 +93,17 @@ class UserController implements userInterface
                 header("LOCATION:" . BASE_BATH);
             }
         } else {
-            echo "<h1>this ID is not exist</h1>";
+            echo json_encode(
+                ['msg' => 'this ID is not exist']
+            );
         }
     }
 
 
-    public function login($email, $password)
+    public function login()
     {
+        $email = $_POST["email"] ; 
+        $password = $_POST["password"] ;
         $is_exist = $this->model->getEmail($email);
         if ($is_exist) {
             if ($is_exist["password"] == $password) {
@@ -99,16 +114,40 @@ class UserController implements userInterface
                  * Here we well return Json 
                  * return this message : Your password is incorrect 
                  */
+                echo json_encode(
+                    [
+                        'msg' => 'Your password is incorrect'
+                    ]
+                );
             }
         } else {
             /**
              * Here we well return Json 
              * return this message : Your email is not exist 
              */
+            echo json_encode(
+                [
+                    'msg' => ' Your email is not exist'
+                ]
+            );
+            
         }
     }
-    public function reges($data)
+    public function reges()
     {
+        if ($_SERVER["REQUEST_METHOD"] != 'POST') {
+            echo json_encode(
+                [
+                    'msg' => "Access denied"
+                ]
+            );
+        }
+        $data = [
+            'name' => $_POST["username"],
+            'password' => $_POST["password"],
+            'email' => $_POST["email"],
+            'password_configuration' => $_POST['password']
+        ];
         if ($this->validate($data)) {
             $reges = $this->model->reges($data);
             if ($reges) {
@@ -116,17 +155,32 @@ class UserController implements userInterface
                 /**
                  * return Json message ={ Registration : True }  
                  */
+                echo json_encode(
+                    [
+                        'Registration' => True
+                    ]
+                );
             } else {
 
                 /**
                  * return Json message :{ Registration : False  }
                  */
+                echo json_encode(
+                    [
+                        'Registration' => False
+                    ]
+                );
             }
         } else {
 
             /**
              * return Json message : Your data is invalid  
              */
+            echo json_encode(
+                [
+                    'msg' => ' Your data is invalid'
+                ]
+            );
         }
     }
     public function logout()

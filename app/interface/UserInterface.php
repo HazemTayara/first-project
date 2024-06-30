@@ -2,8 +2,8 @@
 
 interface UserInterface
 {
-    public function login($email , $password);
-    public function reges($data);
+    public function login();
+    public function reges();
     public function logout();
     
 }
